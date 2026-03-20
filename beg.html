@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🧎‍♂️求求了</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  width:100vw;height:100vh;overflow:hidden;
+  background:linear-gradient(180deg,#fff8ef 0%,#ffe8cc 50%,#ffd9a8 100%);
+  font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+  touch-action:none;
+}
+.scene{position:relative;width:100vw;height:100vh}
+
+/* ===== 室内背景墙 ===== */
+.wall-decor{
+  position:absolute;top:0;left:0;width:100%;height:78vh;
+  background:
+    repeating-linear-gradient(90deg,transparent 0,transparent 99px,#f0dcc044 99px,#f0dcc044 100px),
+    repeating-linear-gradient(0deg,transparent 0,transparent 99px,#f0dcc044 99px,#f0dcc044 100px);
+  background-size:100px 100px;
+}
+
+/* 墙上挂画 */
+.wall-frame{
+  position:absolute;top:6vh;left:50%;transform:translateX(-50%);
+  width:clamp(120px,35vw,200px);height:clamp(80px,22vw,140px);
+  background:linear-gradient(135deg,#fce4ec,#f8bbd0);
+  border:8px solid #8d6e63;border-radius:4px;
+  box-shadow:2px 4px 12px rgba(0,0,0,0.15);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.wall-frame::before{
+  content:'❤️';font-size:clamp(30px,8vw,50px);
+  animation:heartFloat 3s ease-in-out infinite;
+}
+@keyframes heartFloat{
+  0%,100%{transform:scale(1) translateY(0)}
+  50%{transform:scale(1.1) translateY(-5px)}
+}
+.wall-frame::after{
+  content:'';position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  width:40px;height:20px;border-bottom:3px solid #5d4037;border-radius:0 0 50% 50%;
+}
+
+/* 小灯 */
+.ceiling-light{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:4px;height:clamp(20px,5vh,40px);background:#8d6e63;
+}
+.ceiling-light::after{
+  content:'';position:absolute;bottom:-15px;left:50%;transform:translateX(-50%);
+  width:30px;height:18px;background:linear-gradient(180deg,#ffecb3,#ffe082);
+  border-radius:0 0 50% 50%;
+  box-shadow:0 8px 30px rgba(255,224,130,0.6);
+}
+
+/* 地板 */
+.ground{
+  position:absolute;bottom:0;width:100%;height:22vh;
+  background:linear-gradient(180deg,#d7a86e 0%,#c4935a 50%,#b8874e 100%);
+  border-top:3px solid #a67a44;
+}
+.ground::before{
+  content:'';position:absolute;top:0;width:100%;height:100%;
+  background:
+    repeating-linear-gradient(90deg,
+      #c9935c 0,#c9935c 59px,#b8874e 59px,#b8874e 60px,
+      #d4a06a 60px,#d4a06a 119px,#c9935c 119px,#c9935c 120px);
+  background-size:120px 100%;opacity:0.5;
+}
+.ground::after{
+  content:'';position:absolute;top:0;width:100%;height:30%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent);
+}
+
+/* 盆栽 */
+.plant{position:absolute;bottom:22vh;z-index:5}
+.plant.left{left:3vw}
+.plant.right{right:3vw}
+.plant-pot{
+  width:28px;height:24px;
+  background:linear-gradient(180deg,#a1887f,#8d6e63);
+  border-radius:3px 3px 6px 6px;position:relative;
+}
+.plant-pot::before{
+  content:'';position:absolute;top:-3px;left:-3px;
+  width:34px;height:6px;background:#8d6e63;border-radius:3px;
+}
+.plant-leaves{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  width:10px;height:30px;
+}
+.plant-leaf{
+  position:absolute;width:16px;height:22px;
+  background:#66bb6a;border-radius:50% 0 50% 0;border:1px solid #4caf50;
+}
+.plant-leaf:nth-child(1){transform:rotate(-30deg);left:-10px;bottom:5px}
+.plant-leaf:nth-child(2){transform:rotate(30deg);right:-10px;bottom:5px}
+.plant-leaf:nth-child(3){transform:rotate(-10deg);left:-4px;bottom:18px}
+.plant-leaf:nth-child(4){transform:rotate(10deg);right:-4px;bottom:18px}
+.plant-leaf:nth-child(5){bottom:28px;left:-2px;background:#81c784}
+
+/* ===== 女生 ===== */
+.girl{
+  position:absolute;bottom:22vh;right:clamp(8vw,12vw,18vw);z-index:10;
+  opacity:0;transform:scale(0.95);
+}
+.girl.show{opacity:1;transform:scale(1);transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+.girl-body{position:relative;width:70px;height:180px}
+
+.g-head{
+  position:absolute;width:46px;height:48px;
+  background:radial-gradient(ellipse at 50% 40%,#ffe8d0,#fdd9b5);
+  border-radius:50%;top:5px;left:50%;transform:translateX(-50%);z-index:3;
+  box-shadow:inset -3px -3px 6px rgba(200,160,120,0.2);
+}
+.g-hair-top{
+  position:absolute;width:54px;height:34px;
+  background:#3e2723;border-radius:50% 50% 10% 10%;
+  top:0;left:50%;transform:translateX(-50%);z-index:4;
+}
+.g-bangs{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:5;
+  width:42px;height:13px;background:#3e2723;border-radius:0 0 50% 50%;
+}
+.g-hair-side{
+  position:absolute;width:13px;height:75px;
+  background:#3e2723;border-radius:0 0 8px 8px;top:22px;z-index:2;
+}
+.g-hair-side.l{left:2px}
+.g-hair-side.r{right:2px}
+.g-hairpin{
+  position:absolute;top:12px;right:6px;z-index:6;
+  width:10px;height:10px;background:#ff80ab;
+  border-radius:50%;border:2px solid #f48fb1;
+  box-shadow:0 0 6px rgba(255,128,171,0.5);
+}
+
+.g-eye{
+  position:absolute;width:8px;height:10px;
+  background:#2c1810;border-radius:50%;top:24px;z-index:5;
+}
+.g-eye.l{left:11px}.g-eye.r{left:28px}
+.g-eye::before{
+  content:'';position:absolute;width:3px;height:3px;
+  background:#fff;border-radius:50%;top:2px;left:2px;
+}
+.g-eye::after{
+  content:'';position:absolute;width:10px;height:0;
+  border-top:2px solid #2c1810;top:-2px;left:-1px;border-radius:50%;
+}
+
+.g-brow{
+  position:absolute;width:10px;height:0;
+  border-top:2.5px solid #4e342e;top:18px;z-index:6;
+}
+.g-brow.l{left:10px;transform:rotate(12deg)}
+.g-brow.r{left:27px;transform:rotate(-12deg)}
+
+.g-mouth{
+  position:absolute;width:7px;height:4px;
+  background:#e57373;border-radius:50%;
+  top:36px;left:50%;transform:translateX(-50%);z-index:5;
+}
+.g-blush{
+  position:absolute;width:8px;height:5px;
+  background:rgba(255,138,128,0.5);border-radius:50%;top:32px;z-index:5;
+}
+.g-blush.l{left:4px}.g-blush.r{left:34px}
+
+.g-neck{
+  position:absolute;width:12px;height:10px;
+  background:#fdd9b5;top:48px;left:50%;transform:translateX(-50%);z-index:1;
+}
+.g-top{
+  position:absolute;top:54px;left:50%;transform:translateX(-50%);
+  width:34px;height:36px;
+  background:linear-gradient(180deg,#f48fb1,#ec407a);
+  border-radius:6px 6px 2px 2px;z-index:2;
+  box-shadow:inset 0 -4px 8px rgba(0,0,0,0.1);
+}
+.g-top::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:14px;height:7px;background:#fdd9b5;border-radius:0 0 50% 50%;
+}
+.g-waist{
+  position:absolute;top:87px;left:50%;transform:translateX(-50%);
+  width:26px;height:8px;background:#ec407a;z-index:1;
+}
+.g-skirt{
+  position:absolute;top:93px;left:50%;transform:translateX(-50%);
+  width:48px;height:42px;
+  background:linear-gradient(180deg,#ec407a,#e91e63);
+  border-radius:0 0 26px 26px;z-index:1;
+  box-shadow:0 3px 8px rgba(233,30,99,0.2);
+}
+.g-skirt::before{
+  content:'';position:absolute;top:4px;left:8px;
+  width:2px;height:30px;background:rgba(255,255,255,0.15);border-radius:2px;
+}
+.g-skirt::after{
+  content:'';position:absolute;top:4px;right:8px;
+  width:2px;height:30px;background:rgba(255,255,255,0.15);border-radius:2px;
+}
+
+.g-arm{
+  position:absolute;width:11px;height:36px;
+  background:linear-gradient(180deg,#fdd9b5,#f5c9a0);
+  border-radius:6px;top:56px;z-index:3;transform-origin:top center;
+}
+.g-arm.l{left:-2px;transform:rotate(25deg)}
+.g-arm.r{right:-2px;transform:rotate(-25deg)}
+.g-hand{
+  position:absolute;width:12px;height:12px;
+  background:#fdd9b5;border-radius:50%;bottom:-5px;
+}
+
+.g-leg{
+  position:absolute;width:11px;height:42px;
+  background:#fdd9b5;border-radius:0 0 4px 4px;top:132px;z-index:0;
+}
+.g-leg.l{left:18px}.g-leg.r{left:42px}
+.g-shoe{
+  position:absolute;bottom:-8px;left:-3px;
+  width:16px;height:10px;background:#e91e63;border-radius:8px 8px 4px 4px;
+}
+
+.anger{
+  position:absolute;top:-2px;right:0px;font-size:20px;z-index:20;
+  animation:angerPop 0.6s ease-in-out infinite;
+}
+.anger2{
+  position:absolute;top:10px;right:-18px;font-size:14px;z-index:20;
+  animation:angerPop 0.6s ease-in-out infinite 0.3s;
+}
+@keyframes angerPop{
+  0%,100%{transform:scale(1) rotate(0)}
+  50%{transform:scale(1.3) rotate(12deg)}
+}
+
+.girl.show .girl-body{animation:girlStomp 0.8s ease-in-out infinite}
+@keyframes girlStomp{
+  0%,100%{transform:translateY(0)}
+  30%{transform:translateY(-4px)}
+  50%{transform:translateY(2px)}
+}
+
+/* ===== 男生 ===== */
+.boy{
+  position:absolute;bottom:22vh;left:clamp(5vw,12vw,18vw);z-index:10;opacity:0;
+}
+.boy.show{opacity:1}
+.boy.enter{animation:boySlide 1.2s cubic-bezier(0.25,1,0.5,1) forwards}
+@keyframes boySlide{
+  0%{opacity:0;left:-120px}
+  70%{opacity:1;left:clamp(7vw,14vw,20vw)}
+  85%{left:clamp(4vw,11vw,17vw)}
+  100%{opacity:1;left:clamp(5vw,12vw,18vw)}
+}
+.boy-body{position:relative;width:100px;height:120px}
+
+.b-head{
+  position:absolute;width:46px;height:48px;
+  background:radial-gradient(ellipse at 50% 40%,#ffe8d0,#fdd9b5);
+  border-radius:50%;top:6px;left:38px;z-index:4;
+  box-shadow:inset -2px -2px 5px rgba(200,160,120,0.2);
+}
+.b-hair{
+  position:absolute;width:50px;height:28px;
+  background:linear-gradient(180deg,#212121,#37474f);
+  border-radius:50% 50% 5% 5%;top:1px;left:36px;z-index:5;
+}
+.b-hair::before{
+  content:'';position:absolute;bottom:-4px;left:6px;
+  width:12px;height:8px;background:#212121;border-radius:0 0 50% 50%;
+}
+.b-hair::after{
+  content:'';position:absolute;bottom:-3px;left:18px;
+  width:10px;height:6px;background:#2c2c2c;border-radius:0 0 50% 50%;
+}
+
+.b-eye{
+  position:absolute;width:7px;height:8px;
+  background:#2c1810;border-radius:50%;top:22px;z-index:6;
+}
+.b-eye.l{left:12px}.b-eye.r{left:28px}
+.b-eye::before{
+  content:'';position:absolute;width:3px;height:3px;
+  background:#fff;border-radius:50%;top:1px;left:1px;
+}
+
+.b-brow{
+  position:absolute;width:10px;height:0;
+  border-top:2.5px solid #455a64;top:17px;z-index:7;
+}
+.b-brow.l{left:10px;transform:rotate(-15deg)}
+.b-brow.r{left:27px;transform:rotate(15deg)}
+
+.b-mouth{
+  position:absolute;width:12px;height:5px;
+  border-bottom:2.5px solid #c0776e;
+  top:35px;left:50%;transform:translateX(-50%) scaleY(-1);z-index:6;
+  border-radius:0 0 50% 50%;
+}
+
+.b-tear{
+  position:absolute;width:5px;height:10px;
+  background:linear-gradient(180deg,#81d4fa,#4fc3f7);
+  border-radius:50% 50% 50% 50%/30% 30% 70% 70%;
+  z-index:8;opacity:0;
+}
+.b-tear.l{left:14px;top:30px}.b-tear.r{left:31px;top:30px}
+.boy.show .b-tear{animation:tearFall 1s ease-in infinite}
+.boy.show .b-tear.r{animation-delay:0.4s}
+@keyframes tearFall{
+  0%{opacity:0;transform:translateY(0) scale(0.3)}
+  15%{opacity:1;transform:translateY(0) scale(1)}
+  85%{opacity:0.7;transform:translateY(22px) scale(0.6)}
+  100%{opacity:0;transform:translateY(30px) scale(0.2)}
+}
+
+.b-sweat{
+  position:absolute;width:6px;height:10px;
+  background:linear-gradient(180deg,#b3e5fc,#81d4fa);
+  border-radius:50% 50% 50% 50%/30% 30% 70% 70%;
+  z-index:8;opacity:0;
+}
+.b-sweat.s1{top:5px;right:-6px}
+.b-sweat.s2{top:12px;right:-12px;width:4px;height:7px}
+.boy.show .b-sweat.s1{animation:sweatGo 2s ease-in infinite}
+.boy.show .b-sweat.s2{animation:sweatGo 2s ease-in infinite 0.8s}
+@keyframes sweatGo{
+  0%{opacity:0;transform:translate(0,0)}
+  10%{opacity:0.9}
+  100%{opacity:0;transform:translate(8px,25px)}
+}
+
+.b-neck{
+  position:absolute;width:16px;height:8px;
+  background:#fdd9b5;top:48px;left:48px;z-index:2;
+}
+.b-torso{
+  position:absolute;top:52px;left:30px;
+  width:42px;height:34px;
+  background:linear-gradient(180deg,#42a5f5,#1e88e5);
+  border-radius:6px 6px 2px 2px;z-index:2;
+  transform:rotate(12deg);transform-origin:bottom right;
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,0.1);
+}
+.b-torso::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:14px;height:6px;background:#fdd9b5;border-radius:0 0 50% 50%;
+}
+
+.b-hands{
+  position:absolute;top:48px;left:66px;z-index:6;
+  animation:handsBeg 0.6s ease-in-out infinite;
+}
+@keyframes handsBeg{
+  0%,100%{transform:rotate(0) translateY(0)}
+  25%{transform:rotate(6deg) translateY(-3px)}
+  75%{transform:rotate(-6deg) translateY(-3px)}
+}
+.b-palm-l,.b-palm-r{
+  position:absolute;width:16px;height:20px;
+  background:linear-gradient(180deg,#fdd9b5,#f5c9a0);
+  border-radius:4px 4px 10px 10px;
+}
+.b-palm-l{left:0;transform:rotate(5deg)}
+.b-palm-r{left:10px;transform:rotate(-5deg)}
+.b-palm-l::before,.b-palm-r::before{
+  content:'';position:absolute;top:6px;left:3px;
+  width:9px;height:1px;background:rgba(200,160,120,0.4);
+}
+.b-forearm{
+  position:absolute;width:12px;height:24px;
+  background:linear-gradient(180deg,#42a5f5,#fdd9b5);
+  border-radius:6px;top:14px;left:-8px;transform:rotate(-20deg);z-index:-1;
+}
+
+.b-hip{
+  position:absolute;top:80px;left:24px;
+  width:40px;height:18px;
+  background:linear-gradient(180deg,#1565c0,#0d47a1);
+  border-radius:4px;z-index:1;transform:rotate(5deg);
+}
+/* 左大腿（前面那条，竖直跪地） */
+.b-thigh-l{
+  position:absolute;top:92px;left:22px;
+  width:18px;height:24px;background:#0d47a1;border-radius:4px;z-index:1;
+}
+/* 左小腿（折回去贴地） */
+.b-shin-l{
+  position:absolute;bottom:2px;left:10px;
+  width:30px;height:14px;background:#0d47a1;border-radius:6px;z-index:0;
+}
+/* 右大腿 */
+.b-thigh-r{
+  position:absolute;top:92px;left:42px;
+  width:18px;height:24px;background:#0d47a1;border-radius:4px;z-index:1;
+}
+/* 右小腿 */
+.b-shin-r{
+  position:absolute;bottom:2px;left:48px;
+  width:30px;height:14px;background:#0d47a1;border-radius:6px;z-index:0;
+}
+/* 膝盖高光 */
+.b-knee{
+  position:absolute;top:112px;width:10px;height:10px;
+  background:#1565c0;border-radius:50%;z-index:2;
+}
+.b-knee.l{left:26px}
+.b-knee.r{left:46px}
+/* 鞋子 */
+.b-shoe-l,.b-shoe-r{
+  position:absolute;bottom:0px;width:16px;height:10px;
+  background:#37474f;border-radius:6px 6px 3px 3px;
+}
+.b-shoe-l{left:22px}.b-shoe-r{left:60px}
+
+.boy.show .boy-body{animation:bowBeg 1.2s ease-in-out infinite}
+@keyframes bowBeg{
+  0%,100%{transform:translateY(0) rotate(0)}
+  40%{transform:translateY(4px) rotate(6deg)}
+  60%{transform:translateY(4px) rotate(6deg)}
+  80%{transform:translateY(0) rotate(0)}
+}
+
+/* ===== 气泡 ===== */
+.bubble{
+  position:absolute;z-index:50;background:white;border-radius:20px;
+  padding:14px 20px;box-shadow:0 6px 20px rgba(0,0,0,0.1),0 1px 3px rgba(0,0,0,0.08);
+  opacity:0;max-width:68vw;text-align:center;line-height:1.6;
+}
+.bubble::after{
+  content:'';position:absolute;bottom:-10px;width:0;height:0;
+  border-left:10px solid transparent;border-right:10px solid transparent;
+  border-top:12px solid white;
+}
+.bubble.boy-b{bottom:calc(22vh + 140px);left:3vw}
+.bubble.boy-b::after{left:25px}
+.bubble.girl-b{bottom:calc(22vh + 185px);right:3vw}
+.bubble.girl-b::after{right:22px}
+
+.bubble.show{animation:bubblePop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards}
+@keyframes bubblePop{
+  0%{opacity:0;transform:scale(0.3) translateY(10px)}
+  60%{transform:scale(1.05) translateY(-2px)}
+  100%{opacity:1;transform:scale(1) translateY(0)}
+}
+
+.btext{font-size:clamp(15px,3.8vw,20px);font-weight:700;color:#333}
+.btext .red{color:#ff4757;font-size:clamp(17px,4.2vw,24px)}
+.btext .blue{color:#1e88e5}
+
+/* ===== 标题 ===== */
+.title-overlay{
+  position:fixed;top:0;left:0;width:100vw;height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;z-index:100;opacity:0;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,0.7) 0%,transparent 70%);
+}
+.title-overlay.show{animation:titleIn 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards}
+@keyframes titleIn{
+  0%{opacity:0;transform:scale(0.5)}
+  100%{opacity:1;transform:scale(1)}
+}
+.t-main{
+  font-size:clamp(32px,9vw,56px);font-weight:900;
+  color:#ff4757;letter-spacing:4px;text-align:center;
+  text-shadow:3px 3px 0 #fff,-3px -3px 0 #fff,3px -3px 0 #fff,-3px 3px 0 #fff,0 6px 20px rgba(255,71,87,0.3);
+  animation:textWobble 2s ease-in-out infinite;
+}
+@keyframes textWobble{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(1deg)}}
+.t-sub{
+  font-size:clamp(16px,4.5vw,24px);color:#666;
+  margin-top:12px;font-weight:700;opacity:0;
+}
+.title-overlay.show .t-sub{animation:fadeUp 0.6s ease forwards 0.5s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.t-emoji{font-size:48px;margin-top:16px;opacity:0}
+.title-overlay.show .t-emoji{animation:emojiPop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards 1s}
+@keyframes emojiPop{
+  0%{opacity:0;transform:scale(0) rotate(-30deg)}
+  100%{opacity:1;transform:scale(1) rotate(0)}
+}
+.t-emoji.beat{animation:heartBeat 1s ease-in-out infinite!important;opacity:1!important}
+@keyframes heartBeat{
+  0%,100%{transform:scale(1)}15%{transform:scale(1.25)}
+  30%{transform:scale(1)}45%{transform:scale(1.15)}
+}
+
+/* ===== 横幅 ===== */
+.banner{
+  position:fixed;bottom:4vh;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,#ff6b81,#ff4757);
+  color:white;padding:14px 28px;border-radius:50px;
+  font-size:clamp(13px,3.2vw,17px);font-weight:800;letter-spacing:1.5px;
+  box-shadow:0 6px 25px rgba(255,71,87,0.4);
+  z-index:200;opacity:0;pointer-events:none;text-align:center;
+}
+.banner.show{
+  animation:bannerIn 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards,
+             bannerGlow 2s ease-in-out infinite 0.6s;
+}
+@keyframes bannerIn{
+  from{opacity:0;transform:translateX(-50%) translateY(20px) scale(0.8)}
+  to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+}
+@keyframes bannerGlow{
+  0%,100%{box-shadow:0 6px 25px rgba(255,71,87,0.4)}
+  50%{box-shadow:0 6px 45px rgba(255,71,87,0.7)}
+}
+
+/* ===== 飘浮emoji ===== */
+.fem{position:fixed;pointer-events:none;z-index:90;font-size:28px;opacity:0}
+.fem.go{animation:emFloat 3s ease-out forwards}
+@keyframes emFloat{
+  0%{opacity:1;transform:translateY(0) scale(0.4) rotate(0)}
+  30%{opacity:1;transform:translateY(-50px) scale(1.2) rotate(15deg)}
+  100%{opacity:0;transform:translateY(-180px) scale(0.6) rotate(-20deg)}
+}
+
+/* ===== 按钮 ===== */
+.start-btn{
+  position:fixed;bottom:16vh;left:50%;transform:translateX(-50%);z-index:200;
+  background:linear-gradient(135deg,#42a5f5,#1e88e5);
+  color:white;border:none;padding:16px 44px;border-radius:50px;
+  font-size:18px;font-weight:700;cursor:pointer;
+  box-shadow:0 8px 30px rgba(30,136,229,0.5);
+  animation:btnP 2s ease-in-out infinite;letter-spacing:3px;
+  font-family:-apple-system,"PingFang SC","Helvetica Neue",sans-serif;
+}
+.start-btn:active{transform:translateX(-50%) scale(0.95)}
+@keyframes btnP{
+  0%,100%{box-shadow:0 8px 30px rgba(30,136,229,0.5);transform:translateX(-50%) translateY(0)}
+  50%{box-shadow:0 8px 50px rgba(30,136,229,0.8);transform:translateX(-50%) translateY(-3px)}
+}
+.start-btn.hidden{display:none}
+
+/* 碎心 */
+.broken-hearts{
+  position:absolute;bottom:22vh;left:0;width:100%;height:30px;
+  z-index:1;pointer-events:none;opacity:0;
+}
+.broken-hearts.show{opacity:1}
+.bh{position:absolute;bottom:5px;font-size:14px;animation:bhFade 2s ease-in-out infinite}
+@keyframes bhFade{0%,100%{opacity:0.4;transform:scale(0.9)}50%{opacity:0.7;transform:scale(1.1)}}
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="wall-decor"></div>
+  <div class="ceiling-light"></div>
+  <div class="wall-frame"></div>
+
+  <div class="plant left">
+    <div class="plant-leaves">
+      <div class="plant-leaf"></div><div class="plant-leaf"></div>
+      <div class="plant-leaf"></div><div class="plant-leaf"></div>
+      <div class="plant-leaf"></div>
+    </div>
+    <div class="plant-pot"></div>
+  </div>
+  <div class="plant right">
+    <div class="plant-leaves">
+      <div class="plant-leaf"></div><div class="plant-leaf"></div>
+      <div class="plant-leaf"></div><div class="plant-leaf"></div>
+      <div class="plant-leaf"></div>
+    </div>
+    <div class="plant-pot"></div>
+  </div>
+
+  <!-- 女生 -->
+  <div class="girl" id="girl">
+    <div class="girl-body">
+      <div class="g-hair-top"></div>
+      <div class="g-bangs"></div>
+      <div class="g-hair-side l"></div>
+      <div class="g-hair-side r"></div>
+      <div class="g-hairpin"></div>
+      <div class="g-head">
+        <div class="g-brow l"></div><div class="g-brow r"></div>
+        <div class="g-eye l"></div><div class="g-eye r"></div>
+        <div class="g-blush l"></div><div class="g-blush r"></div>
+        <div class="g-mouth"></div>
+      </div>
+      <div class="anger">💢</div>
+      <div class="anger2">💢</div>
+      <div class="g-neck"></div>
+      <div class="g-top"></div>
+      <div class="g-waist"></div>
+      <div class="g-skirt"></div>
+      <div class="g-arm l"><div class="g-hand"></div></div>
+      <div class="g-arm r"><div class="g-hand"></div></div>
+      <div class="g-leg l"><div class="g-shoe"></div></div>
+      <div class="g-leg r"><div class="g-shoe"></div></div>
+    </div>
+  </div>
+
+  <!-- 男生 -->
+  <div class="boy" id="boy">
+    <div class="boy-body">
+      <div class="b-hair"></div>
+      <div class="b-head">
+        <div class="b-brow l"></div><div class="b-brow r"></div>
+        <div class="b-eye l"></div><div class="b-eye r"></div>
+        <div class="b-mouth"></div>
+        <div class="b-tear l"></div><div class="b-tear r"></div>
+        <div class="b-sweat s1"></div><div class="b-sweat s2"></div>
+      </div>
+      <div class="b-neck"></div>
+      <div class="b-torso"></div>
+      <div class="b-hands">
+        <div class="b-forearm"></div>
+        <div class="b-palm-l"></div><div class="b-palm-r"></div>
+      </div>
+      <div class="b-hip"></div>
+      <div class="b-thigh-l"></div>
+      <div class="b-shin-l"></div>
+      <div class="b-thigh-r"></div>
+      <div class="b-shin-r"></div>
+      <div class="b-knee l"></div>
+      <div class="b-knee r"></div>
+      <div class="b-shoe-l"></div>
+      <div class="b-shoe-r"></div>
+    </div>
+  </div>
+
+  <div class="broken-hearts" id="bhearts">
+    <div class="bh" style="left:20%;animation-delay:0s">💔</div>
+    <div class="bh" style="left:40%;animation-delay:0.5s">💔</div>
+    <div class="bh" style="left:60%;animation-delay:1s">💔</div>
+    <div class="bh" style="left:75%;animation-delay:0.3s">💔</div>
+  </div>
+
+  <div class="ground"></div>
+</div>
+
+<div class="bubble boy-b" id="b1">
+  <div class="btext">宝宝 <span class="red">有事好商量！</span> 🙏</div>
+</div>
+<div class="bubble girl-b" id="b2">
+  <div class="btext">哼！😤 你说吧</div>
+</div>
+<div class="bubble boy-b" id="b3">
+  <div class="btext"><span class="blue">一切听你的！</span><br>除了当模子 🧎‍♂️💦</div>
+</div>
+<div class="bubble girl-b" id="b4">
+  <div class="btext">就不！偏要当！😏</div>
+</div>
+
+<div class="title-overlay" id="tOver">
+  <div class="t-main">一切听你的</div>
+  <div class="t-sub">除了当模子！🧎‍♂️🙅‍♂️</div>
+  <div class="t-emoji" id="tEmoji">🥺🙏❤️‍🩹</div>
+</div>
+
+<div class="banner" id="ban">🧎‍♂️ 求求了 什么都答应 就是别当模子 🙏</div>
+
+<button class="start-btn" id="startBtn" onclick="go()">🧎‍♂️ 点我看好戏</button>
+
+<script>
+function go(){
+  var btn=document.getElementById('startBtn');
+  var girl=document.getElementById('girl');
+  var boy=document.getElementById('boy');
+  var bh=document.getElementById('bhearts');
+  var b1=document.getElementById('b1');
+  var b2=document.getElementById('b2');
+  var b3=document.getElementById('b3');
+  var b4=document.getElementById('b4');
+  var tO=document.getElementById('tOver');
+  var ban=document.getElementById('ban');
+  var tE=document.getElementById('tEmoji');
+
+  btn.classList.add('hidden');
+  setTimeout(function(){bh.classList.add('show')},200);
+  setTimeout(function(){girl.classList.add('show')},500);
+  setTimeout(function(){boy.classList.add('show','enter')},1500);
+  setTimeout(function(){b1.classList.add('show')},3000);
+  setTimeout(function(){
+    b1.style.opacity='0';b1.style.transition='opacity 0.4s';
+    b2.classList.add('show');
+  },5200);
+  setTimeout(function(){
+    b2.style.opacity='0';b2.style.transition='opacity 0.4s';
+    b3.classList.add('show');spawnEm();
+  },7500);
+  setTimeout(function(){
+    b3.style.opacity='0';b3.style.transition='opacity 0.4s';
+    b4.classList.add('show');
+  },10200);
+  setTimeout(function(){
+    b4.style.opacity='0';b4.style.transition='opacity 0.4s';
+    tO.classList.add('show');ban.classList.add('show');
+    setTimeout(function(){tE.classList.add('beat')},1500);
+  },12500);
+}
+function spawnEm(){
+  var es=['🙏','😭','🧎‍♂️','💦','😢','🥺','❌🧱','😰','🫠'];
+  for(var i=0;i<15;i++){
+    (function(x){setTimeout(function(){
+      var e=document.createElement('div');e.className='fem';
+      e.textContent=es[Math.floor(Math.random()*es.length)];
+      e.style.left=(5+Math.random()*90)+'%';
+      e.style.top=(40+Math.random()*35)+'%';
+      e.style.fontSize=(22+Math.random()*16)+'px';
+      document.body.appendChild(e);e.offsetHeight;e.classList.add('go');
+      setTimeout(function(){e.remove()},3000);
+    },x*250)})(i);
+  }
+}
+</script>
+</body>
+</html>
